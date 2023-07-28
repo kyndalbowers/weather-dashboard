@@ -1,0 +1,7 @@
+header {
+    display:flex;
+    color: white;
+    background-color: darkblue;
+    font-size: larger;
+    font-weight: 700;
+}
