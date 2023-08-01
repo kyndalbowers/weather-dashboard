@@ -5,8 +5,62 @@ var form = document.getElementById("form");
 var searchInput = document.getElementById("search-input");
 var searchButton = document.getElementById("searchButton");
 
+// SEARCH HISTORY
+var searchedCities = [];
+
+// Function to retrieve the previously searched cities from localStorage
+function loadSearchHistory() {
+  var historyData = localStorage.getItem('history');
+  if (historyData) {
+    searchedCities = JSON.parse(historyData);
+  }
+}
+
+// Function to update the search history in localStorage
+function updateSearchHistory() {
+  localStorage.setItem('history', JSON.stringify(searchedCities));
+}
+
+// Call the function to load the search history when the script loads
+loadSearchHistory();
+
+function addCity(){
+  // checking if city is already in favs list
+  if(searchedCities.includes(document.getElementById("search-input").value)){
+    console.log(document.getElementById("search-input").value + " is already in search history list")
+
+  // adding city to history list
+  }else{
+    console.log("Adding " + document.getElementById("search-input").value + " to search history list...");
+    searchedCities.push(document.getElementById("search-input").value);
+    localStorage.setItem('history', JSON.stringify(searchedCities));
+    console.log('history list updated!');
+    console.log(searchedCities);
+    updateSearchHistory();
+  }
+}
+
+// DISPLAY SEARCH HISTORY
+var listHistory = document.getElementById("ul-history");
+
+searchedCities.forEach((item) => {
+  let li = document.createElement("li");
+  li.textContent = item;
+  li.classList.add("list-group-item");
+  li.addEventListener("click", function () {
+    getCurrentWeatherInfo(item);
+  });
+  listHistory.appendChild(li);
+});
+
+
 // WEATHER & API
 var apiKey = "d426c53653b05237d4d24727c6d77db0";
+
+function formatDate(date) {
+  const options = { year: 'numeric', month: 'long', day: 'numeric' };
+  return date.toLocaleDateString(undefined, options);
+}
 
 function getCurrentWeatherInfo(cityName) {
   var currentWeatherURL = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=imperial&appid=${apiKey}`;
@@ -27,6 +81,7 @@ function getCurrentWeatherInfo(cityName) {
       console.log(data);
       displayForecastWeather(data);
     })
+  addCity();
 }
 
 function displayCurrentWeather(data) {
@@ -53,11 +108,12 @@ function displayCurrentWeather(data) {
   // document.body.style.backgroundImage = "url('https://source.unsplash.com/1600x900/?" + description + "')";
 }
 
-function displayForecast(data) {
+function displayForecastWeather(data) {
+  const forecastContainer = document.getElementById('forecastContainer');
   forecastContainer.innerHTML = '';
 
   const forecastList = data.list;
-  const displayedDates = []; // To track displayed dates
+  const displayedDates = [];
 
   for (let i = 0; i < forecastList.length; i++) {
     const forecastItem = document.createElement('div');
@@ -66,9 +122,8 @@ function displayForecast(data) {
     const date = new Date(forecastList[i].dt_txt);
     const day = date.getDate();
 
-    // Check if the date is already displayed
     if (!displayedDates.includes(day)) {
-      displayedDates.push(day); // Add the date to displayedDates
+      displayedDates.push(day);
 
       const forecastDay = document.createElement('div');
       forecastDay.textContent = getDayOfWeek(date);
@@ -100,3 +155,9 @@ searchButton.addEventListener ("click", function () {
   console.log("City searched: " + cityName);
   getCurrentWeatherInfo(cityName);
 });
+
+function getDayOfWeek(date) {
+  const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  return daysOfWeek[date.getDay()];
+}
+
