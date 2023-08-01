@@ -44,13 +44,13 @@ function addCity(){
 var listHistory = document.getElementById("ul-history");
 
 searchedCities.forEach((item) => {
-  let li = document.createElement("li");
-  li.textContent = item;
-  li.classList.add("list-group-item");
-  li.addEventListener("click", function () {
+  let cityButton = document.createElement("button");
+  cityButton.textContent = item;
+  cityButton.classList.add("city-button");
+  cityButton.addEventListener("click", function () {
     getCurrentWeatherInfo(item);
   });
-  listHistory.appendChild(li);
+  listHistory.appendChild(cityButton);
 });
 
 
