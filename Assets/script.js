@@ -1,5 +1,3 @@
-console.log("Code loads...");
-
 // SEARCH BAR
 var form = document.getElementById("form");
 var searchInput = document.getElementById("search-input");
@@ -21,9 +19,10 @@ function updateSearchHistory() {
   localStorage.setItem('history', JSON.stringify(searchedCities));
 }
 
-// Call the function to load the search history when the script loads
+// Call function to load the search history when the script loads
 loadSearchHistory();
 
+// Function to add searched city to localStorage list
 function addCity(){
   // checking if city is already in favs list
   if(searchedCities.includes(document.getElementById("search-input").value)){
@@ -53,15 +52,16 @@ searchedCities.forEach((item) => {
   listHistory.appendChild(cityButton);
 });
 
-
 // WEATHER & API
 var apiKey = "d426c53653b05237d4d24727c6d77db0";
 
+// DATE FUNCTIONALITY
 function formatDate(date) {
   const options = { year: 'numeric', month: 'long', day: 'numeric' };
   return date.toLocaleDateString(undefined, options);
 }
 
+// Function to get weather data from API
 function getCurrentWeatherInfo(cityName) {
   var currentWeatherURL = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=imperial&appid=${apiKey}`;
   var forecastWeatherURL = `https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&units=imperial&&appid=${apiKey}`
@@ -84,6 +84,7 @@ function getCurrentWeatherInfo(cityName) {
   addCity();
 }
 
+// Functions to display weather data to page
 function displayCurrentWeather(data) {
   const { name } = data;
   const description = data.weather[0].description;
@@ -95,7 +96,6 @@ function displayCurrentWeather(data) {
   const sunriseTime = new Date(sunriseTimestamp * 1000);
   const sunsetTime = new Date(sunsetTimestamp * 1000);
 
-  // Display weather
   document.querySelector(".city").innerText = "Weather in " + name;
   document.querySelector(".short").innerText = description;
   document.querySelector(".temperature").innerText = temp + "°F";
@@ -105,7 +105,6 @@ function displayCurrentWeather(data) {
   document.querySelector(".sunset").innerText = "Sunset time: " + sunsetTime.toLocaleTimeString();
   document.querySelector(".weather-today").classList.remove("loading");
   document.querySelector(".weather-icon").src = "http://openweathermap.org/img/wn/" + icon + ".png";
-  // document.body.style.backgroundImage = "url('https://source.unsplash.com/1600x900/?" + description + "')";
 }
 
 function displayForecastWeather(data) {
@@ -147,7 +146,7 @@ function displayForecastWeather(data) {
   }
 }
 
-// Search button
+// SEARCH BUTTON
 searchButton.addEventListener ("click", function () {
   console.log("Search button works...");
   event.preventDefault();
@@ -156,6 +155,7 @@ searchButton.addEventListener ("click", function () {
   getCurrentWeatherInfo(cityName);
 });
 
+// DAY FORMATTING
 function getDayOfWeek(date) {
   const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   return daysOfWeek[date.getDay()];
