@@ -17,3 +17,4 @@ OpenWeather API for weather data (https://openweathermap.org/api)
 
 ## Link
 
+Link to deployed project: https://openweathermap.org/api
